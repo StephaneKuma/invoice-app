@@ -19,14 +19,13 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import Navigation from './components/Navigation.vue';
+import InvoiceModal from "./components/InvoiceModal.vue";
+import { useInvoiceStore } from './store/invoice';
 
 const mobile = ref(null);
-
-onMounted(() => {
-    checkScreen();
-    window.addEventListener('resize', checkScreen);
-});
 
 const checkScreen = () => {
     const windowWidth = window.innerWidth;
@@ -38,6 +37,15 @@ const checkScreen = () => {
 
     mobile.value = false;
 };
+
+onMounted(() => {
+    checkScreen();
+    window.addEventListener('resize', checkScreen);
+});
+
+const store = useInvoiceStore();
+const { invoiceModal } = storeToRefs(store);
+const { toggleInvoice } = store;
 </script>
 
 <style lang="scss">
@@ -48,7 +56,6 @@ const checkScreen = () => {
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
-    background-color: #141625;
 }
 
 .app {
@@ -77,6 +84,18 @@ const checkScreen = () => {
     p {
         margin-top: 16px;
     }
+}
+
+// animated invoice
+
+.invoice-enter-active,
+.invoice-leave-active {
+    transition: 0.8s ease all;
+}
+
+.invoice-enter-from,
+.invoice-leave-to {
+    transform: translateX(-700px);
 }
 
 button,
